@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+  <link rel="stylesheet" href="/stylesheets/header.css">
+  <link rel="stylesheet" href="/stylesheets/userJoin.css">
+  <title>JOIN</title>
+</head>
+
+<body>
+  <% include ../header %>
+  <div class="content">
+    <h1>회원가입</h1>
+    <div class="join-form">
+      <form action="/users/join_process" method="post">
+        <input type="text" name="userId" placeholder="아이디">
+        <span class="idCheckSpan">아이디가 존재합니다.</span>
+        <input type="password" name="userPw" placeholder="비밀번호">
+        <input type="password" name="userPwCheck" placeholder="비밀번호 확인">
+        <span class="pwdCheckSpan">비밀번호가 일치하지 않습니다.</span>
+        <button type="submit" class="joinBtn">회원가입</button>
+      </form>
+    </div>
+  </div>
+  <!-- <script src="/javascripts/users.js"></script> -->
+</body>
+
+</html>

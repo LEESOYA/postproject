@@ -1,0 +1,89 @@
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+a:link {
+  color: black;
+  text-decoration: none;
+}
+
+.header-container {
+  /* border: 1px solid red; */
+  height: 70px;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+.header-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 1rem;
+}
+
+.logo {
+  display: flex;
+  flex: 1;
+  font-size: 1.5rem;
+  align-items: center;
+}
+.search {
+  margin-right: 5rem;
+  width: 12rem;
+  display: flex;
+  align-items: center;
+}
+.search input {
+  border-radius: 3px;
+  background: #e2dddd;
+  color: #474747;
+  border: 1px solid transparent;
+  height: 2rem;
+  padding-left: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+.search span {
+  position: relative;
+  right: 30px;
+  margin-right: 0.5rem;
+}
+.search span svg {
+  cursor: pointer;
+}
+#login {
+  height: auto;
+}
+#login button,
+.login-ok {
+  /* background-color: transparent; */
+  background-color: aquamarine;
+  outline: none;
+  height: 2rem;
+  border: 1px solid #dbdbdb;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#write {
+  height: auto;
+  margin-right: 1rem;
+}
+#write button {
+  background-color: transparent;
+  outline: none;
+  height: 2rem;
+  border: 1px solid #dbdbdb;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#logout button {
+  background-color: transparent;
+  outline: none;
+  height: 2rem;
+  border: 1px solid #dbdbdb;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 1rem;
+}

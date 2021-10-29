@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.postWrite-container {
+  position: relative;
+}
+.postWrite-container .post {
+  height: 100vh;
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.post-title input {
+  font-size: 3rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-bottom: 1px solid lightgray;
+  outline: none;
+  margin-bottom: 1rem;
+}
+.post-title input::placeholder {
+  color: darkgray;
+  font-style: italic;
+}
+
+.post-tags input {
+  font-size: 1.7rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-bottom: 1px solid lightgray;
+  outline: none;
+  margin-bottom: 1rem;
+}
+.post-tags input::placeholder {
+  color: lightgray;
+  font-style: italic;
+}
+
+.hashtag-inform {
+  display: none;
+  width: fit-content;
+  border: 1px solid black;
+  padding: 1rem 1.5rem;
+  line-height: 1.7rem;
+  position: absolute;
+  top: 220px;
+  background-color: #363636;
+  color: white;
+}
+
+.post-content textarea {
+  width: 50vw;
+  height: 55vh;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid lightgray;
+  resize: none;
+}
+
+.post-buttons .buttons button {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  outline: none;
+  border: 1px solid #dbdbdb;
+  line-height: 1;
+}
+
+.post-buttons .buttons button:hover {
+  cursor: pointer;
+  color: #bdb8b8;
+}

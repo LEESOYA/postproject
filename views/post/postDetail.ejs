@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/9eb162ac0d.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="/stylesheets/header.css">
+  <link rel="stylesheet" href="/stylesheets/postDetail.css">
+  <title>detail</title>
+</head>
+<body>
+
+  <% include ../header %>
+
+  <section class="detail-page">
+    <% result.forEach(item=> { %>
+      <section class="detail-wrap">
+        <section class="title">
+          <span>
+            <%= item.title %>
+          </span>
+        </section>
+        <section class="writer">
+          <span>
+            <%= item.writer %>
+          </span>
+        </section>
+        <section class="hashtags">
+          <ul>
+            <li>
+              <%= item.hashtag %>
+            </li>
+            <!-- <li>#tag2</li> -->
+          </ul>
+        </section>
+        <section class="main_text">
+          <p>
+            <%= item.main_text %>
+          </p>
+        </section>
+      </section>
+
+      <!-- 댓글 -->
+      <section class="detail-comment">
+        <div class="comment-box">
+          <input type="text" name="comment" class="comment">
+          <button type="button" class="comment-submit" onclick="commentSubmit(<%=item.id%>);">게시</button>
+        </div>
+          <div class="comment-content">
+            <% commentList.forEach(commItem=> { %>
+            <ul class="comment-ul"> 
+              <li class="comment-list">
+                <span class="comm-userId">
+                  <%= commItem.userId %>
+                </span>
+                <span class="comm-comment">
+                  <%= commItem.comment %>
+                </span>
+                <span class="comm-time">
+                  <%= (commItem.time).toLocaleString() %>
+                </span>
+                <button></button>
+              </li>
+            </ul>
+          </div>
+        <% }) %>
+      </section>
+
+        <!-- 내 게시글일때 -->
+        <section class="post-btn">
+          <% if(userId===item.writer) { %>
+            <button onclick="location.href='/post/postUpdate/<%=item.id%>'">게시물 수정</button>
+            <form action="/post/delete/<%=item.id%>" method="post">
+              <button class="deleteBtn" type="submit">삭제하기</button>
+            </form>
+            <% } %>
+        </section>
+    <% }) %>
+  </section>
+  <script src="/javascripts/post/postComment.js"></script>
+</body>
+</html>

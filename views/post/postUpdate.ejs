@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/9eb162ac0d.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/stylesheets/header.css">
+  <link rel="stylesheet" href="/stylesheets/postWrite.css">
+  <title>post update</title>
+</head>
+
+<body>
+  <% include ../header %>
+    
+  <% result.forEach(item=> { %>
+    <form action="/post/update_process/<%=item.id%>" method="post">
+      <div class="postWrite-container">
+        <div class="post">
+          <div class="post-title">
+            <input type="text" name="title" value=<%= item.title %>
+          </div>
+          <div class="post-tags">
+            <input type="text" name="hashtag" value=<%= item.hashtag %>>
+          </div>
+          <div class="post-content">
+            <textarea name="text"><%= item.main_text %></textarea>
+          </div>
+          <div class="post-buttons">
+            <div class="buttons">
+              <button class="returnBtn" type="reset" onclick="location.href='postDetail'">돌아가기</button>
+              <button class="updateBtn" type="submit">수정하기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  
+  <% }) %>
+
+</body>
+</html>

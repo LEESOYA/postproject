@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="/stylesheets/post.css">
+  <title>Document</title>
+</head>
+<body>
+  <header class="header-container">
+    <div class="header-content">
+      <div class="logo"><a href="/">soyalog</a></div>
+      <div class="search">
+        <input type="text">
+        <span class="search-icon">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
+      <% if(userId===undefined) { %>
+        <div id="login" class="hidden">
+          <button onclick="location.href='/users/login'">로그인</button>
+        </div>
+      <% } else { %>
+        <div id="write" class="hidden">
+          <button onclick="location.href='/post/postWrite'">새 글 작성</button>
+        </div>
+        <div id="login" class="hidden">
+          <button class="login-ok">
+            <%= userId %>
+          </button>
+        </div>
+        <div id="logout" class="hidden">
+          <button onclick="location.href='/users/logout'">로그아웃</button>
+        </div>
+        <% } %>
+    </div>
+  </header>
+  
+</body>
+</html>
