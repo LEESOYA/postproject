@@ -4,35 +4,38 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+
 a:link {
   color: black;
   text-decoration: none;
 }
 
-.header-container {
-  /* border: 1px solid red; */
+header {
   height: 70px;
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
 }
-.header-content {
+
+.header-container {
   display: flex;
   align-items: center;
   height: 100%;
   padding: 0 1rem;
 }
 
-.logo {
+.header-logo {
   display: flex;
   flex: 1;
   font-size: 1.5rem;
   align-items: center;
 }
+
 .search {
   margin-right: 5rem;
   width: 12rem;
   display: flex;
   align-items: center;
 }
+
 .search input {
   border-radius: 3px;
   background: #e2dddd;
@@ -51,39 +54,41 @@ a:link {
 .search span svg {
   cursor: pointer;
 }
-#login {
+
+.login {
   height: auto;
 }
-#login button,
+
+.login button,
 .login-ok {
-  /* background-color: transparent; */
-  background-color: aquamarine;
-  outline: none;
+  background-color: #343a40;
   height: 2rem;
+  color: #ffffff;
+  outline: none;
   border: 1px solid #dbdbdb;
   line-height: 1;
   cursor: pointer;
 }
 
-#write {
+.write {
   height: auto;
   margin-right: 1rem;
 }
-#write button {
+.write button {
   background-color: transparent;
-  outline: none;
   height: 2rem;
+  outline: none;
   border: 1px solid #dbdbdb;
   line-height: 1;
   cursor: pointer;
 }
 
-#logout button {
+.logout button {
   background-color: transparent;
-  outline: none;
   height: 2rem;
+  margin-left: 1rem;
+  outline: none;
   border: 1px solid #dbdbdb;
   line-height: 1;
   cursor: pointer;
-  margin-left: 1rem;
 }

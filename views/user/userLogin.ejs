@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/header.css">
   <link rel="stylesheet" href="/stylesheets/userLogin.css">
   <title>login</title>
@@ -15,16 +15,18 @@
     <h1>로그인</h1>
     <div class="login-form">
       <form action="/users/login_process" method="post">
-        <input type="text" name="userId" placeholder="아이디">
-        <input type="password" name="userPw" placeholder="비밀번호">
-        <button type="submit">로그인</button>
+        <input type="text" name="userId" class="idInput" placeholder="아이디" value='<%= userId %>'>
+        <input type="password" name="userPw" class="pswInput" placeholder="비밀번호">
+        <button type="submit" class="loginBtn">로그인</button>
       </form>
     </div>
+    
     
     <div class="content-bottom">
       <button onclick="location.href='../users/pwdFind'">비번찾기</button>
       <button onclick="location.href='../users/join'">회원가입</button>
     </div>
   </div>
+  <script src="/javascripts/users.js"></script>
 </body>
 </html>

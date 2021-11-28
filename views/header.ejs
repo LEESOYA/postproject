@@ -6,37 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link rel="stylesheet" href="/stylesheets/post.css">
-  <title>Document</title>
+  <title>header</title>
 </head>
 <body>
-  <header class="header-container">
-    <div class="header-content">
-      <div class="logo"><a href="/">soyalog</a></div>
-      <div class="search">
-        <input type="text">
+  <header>
+    <div class="header-container">
+      <div class="header-logo"><a href="/">soyalog</a></div>
+
+      <form action="/post/post_search" method="post" class="search">
+        <input type="text" name="search">
         <span class="search-icon">
           <i class="fas fa-search"></i>
         </span>
-      </div>
-      <% if(userId===undefined) { %>
-        <div id="login" class="hidden">
+      </form>
+
+      <% if(!userId) { %>
+        <div class="login">
           <button onclick="location.href='/users/login'">로그인</button>
         </div>
       <% } else { %>
-        <div id="write" class="hidden">
+        <div class="write">
           <button onclick="location.href='/post/postWrite'">새 글 작성</button>
         </div>
-        <div id="login" class="hidden">
+        <div class="login">
           <button class="login-ok">
             <%= userId %>
           </button>
         </div>
-        <div id="logout" class="hidden">
+
+        <div class="logout">
           <button onclick="location.href='/users/logout'">로그아웃</button>
         </div>
         <% } %>
     </div>
   </header>
-  
+  <script src="/javascripts/header.js"></script>
 </body>
 </html>

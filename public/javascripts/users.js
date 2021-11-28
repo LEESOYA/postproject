@@ -1,7 +1,8 @@
-const idCheckSpan = document.querySelector(".idCheckSpan");
-const joinBtn = document.querySelector(".joinBtn");
-// joinBtn.addEventListener('click', () => {
-//   if()
-// })
+const idInput = document.querySelector(".idInput");
+const pswInput = document.querySelector(".pswInput");
+const loginBtn = document.querySelector(".loginBtn");
 
-// export default
+loginBtn.addEventListener("click", () => {
+  if (idInput.value === "") {
+  }
+});

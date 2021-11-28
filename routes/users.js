@@ -1,62 +1,62 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../nodejs/myslq");
-const { message } = require("./middleware");
-const USERPATH = "../views/user/";
 
-router.get("/login", (request, response, next) => {
-  console.log(request.session.user_id);
-  response.render(USERPATH + "userLogin", {
-    userId: request.session.user_id,
+// 로그인
+router.get("/login", (request, response) => {
+  // request.flash("NO_EXIST_USER", "사용자 정보가 없습니다.");
+  response.render("../views/user/userLogin", {
+    userId: request.session.account,
   });
 });
 
-router.post("/login_process", (request, response, next) => {
-  const user = request.body;
-  const userId = user.userId;
-  const userPw = user.userPw;
-  // console.log(message(loginFail));
-  db.query(
-    `select * from user where userId = ? and  userPassword = ?`,
-    [userId, userPw],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      if (!result[0]) {
-        request.render("../views/user/userLogin", {
-          loginMsg: message(loginFail),
-        });
-        response.writeHead(200, { "Content-Type": "text/html;charset=UTF-8" });
-        response.write(
-          "<script type='text/javascript'>alert('로그인 실패')</script>"
-        );
-        response.write('<script>window.location="/users/login"</script>');
-      } else {
-        request.session.is_logined = true;
-        request.session.user_id = userId;
-        // response.render("../views/post/post", { userId: result[0].userId });
-        response.redirect("../");
-      }
+router.post("/login_process", async (request, response) => {
+  const SESSION = request.session;
+  try {
+    const { userId, userPw } = request.body;
+    const [data] = await db.query(
+      `select * from user where account = ? and  password = ?`,
+      [userId, userPw]
+    );
+    // const [pw] = await db.query(`select password from user where account = ?`, [
+    //   userId,
+    // ]);
+
+    if (data[0]) {
+      SESSION.is_loggedIn = true;
+      SESSION.account = [data[0].account];
+      SESSION.user_id = [data[0].userId];
+
+      response.redirect("../");
+    } else if (!data[0]) {
+      SESSION.is_loggedIn = false;
+      response.render("../views/user/userLogin", {
+        // failureMessage: request.flash("NO_EXIST_USER").toString(),
+        userId: request.session.account,
+      });
     }
-  );
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-router.get("/pwdFind", (request, response, next) => {
+router.get("/pwdFind", (request, response) => {
   response.render("../views/user/pwdFind", {
-    userId: request.session.user_id,
+    userId: request.session.account,
   });
 });
 
-router.post("/pwdFind_process", (request, response) => {
-  const userId = request.body.userId;
-  db.query(` select * from user where userId = ?`, [userId], (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(result[0].userPassword);
-  });
-  response.send("");
+router.post("/pwdFind_process", async (request, response) => {
+  try {
+    const { userId } = request.body;
+    const [data] = await db.query(`select * from user where account = ?`, [
+      userId,
+    ]);
+    // 비밀번호 알려주는 창 만들기 ---> 로그인 페이지로 이동
+    response.send(data[0].userPassword);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 router.get("/logout", (request, response, next) => {
@@ -69,42 +69,31 @@ router.get("/logout", (request, response, next) => {
 });
 
 router.get("/join", (request, response, next) => {
-  response.render(USERPATH + "userJoin", {
-    userId: request.session.user_id,
+  response.render("../views/user/userJoin", {
+    userId: request.session.account,
   });
 });
 
-router.post("/join_process", (request, response) => {
-  const user = request.body;
-  const userId = user.userId;
-  const userPw = user.userPw;
-  const userPwCheck = user.userPwCheck;
-  db.query(`select * from user where userId = ?`, [userId], (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    if (result[0]) {
-      response.writeHead(200, { "Content-Type": "text/html;charset=UTF-8" });
-      response.write(
-        "<script type='text/javascript'>alert('아이디가 존재합니다.')</script>"
-      );
-      response.write('<script>window.location="/users/join"</script>');
-    } else if (!result[0]) {
+router.post("/join_process", async (request, response) => {
+  try {
+    const { userId, userPw, userPwCheck } = request.body;
+    const [data] = await db.query(`select * from user where account = ?`, [
+      userId,
+    ]);
+    if (data[0]) {
+      // 실패 메시지 띄워주기
+      response.redirect("./join");
+    } else if (!data[0]) {
       if (userPw === userPwCheck) {
-        db.query(`INSERT INTO user VALUES (?, ?)`, [userId, userPw], err => {
-          if (err) {
-            console.log(err);
-          }
-          response.redirect("/users/login");
-        });
-      } else {
-        response.writeHead(200, { "Content-Type": "text/html;charset=UTF-8" });
-        response.write(
-          "<script type='text/javascript'>alert('패스워드를 확인해주세요')</script>"
+        const [data2] = await db.query(
+          `INSERT INTO user(account, password) VALUES (?, ?)`,
+          [userId, userPw]
         );
-        response.write('<script>window.location="/users/join"</script>');
+        response.redirect("/users/login");
       }
     }
-  });
+  } catch (error) {
+    console.error(error);
+  }
 });
 module.exports = router;

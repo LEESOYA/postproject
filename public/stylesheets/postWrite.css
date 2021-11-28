@@ -32,6 +32,11 @@ body {
   font-style: italic;
 }
 
+.post-tags {
+  display: flex;
+  flex-direction: row;
+}
+
 .post-tags input {
   font-size: 1.7rem;
   padding: 0.5rem 1rem;
@@ -40,6 +45,7 @@ body {
   outline: none;
   margin-bottom: 1rem;
 }
+
 .post-tags input::placeholder {
   color: lightgray;
   font-style: italic;
@@ -57,6 +63,25 @@ body {
   color: white;
 }
 
+.post-tags .tag-list li {
+  font-size: 1.1rem;
+  width: fit-content;
+  padding: 0.7rem 1rem;
+  border-radius: 1.5rem;
+  background-color: rgb(224, 233, 230);
+  color: cadetblue;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.post-tags .tag-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 .post-content textarea {
   width: 50vw;
   height: 55vh;

@@ -1,9 +1,16 @@
 CREATE `postProject`;
 
+CREATE TABLE `user` (
+  `userId` int(11) AUTO_INCREMENT,
+  `account` varchar(20) NOT NULL, 
+  `password` varchar(50) NOT NULL,
+  PRIMARY KEY(`userId`)   
+);
+
 CREATE TABLE `mypost` (
   `id` int(11)  NOT NULL AUTO_INCREMENT,
   `title` varchar(150) NOT NULL,
-  `writer`varchar(100) NOT NULL,
+  `userId`varchar(150) NOT NULL,
   `hashtag` varchar(200),
   `main_text` varchar(2048) NOT NULL,
   `like_cnt` int(11) default 0,
@@ -12,8 +19,32 @@ CREATE TABLE `mypost` (
   PRIMARY KEY (`id`)
 );
 
+ALTER TABLE mypost ADD image VARCHAR(200) DEFAULT ''; -- 이미지 경로만 저장하기
+
+CREATE TABLE `comment` (
+  `commentId` int(11) NOT NULL AUTO_INCREMENT, --댓글 고유 번호
+  `userId` int(11) NOT NULL, -- 회원의 고유 번호
+  `postUserId` varchar(100) NOT NULL, -- 게시글 주인 아이디
+  `postId` int(11) NOT NULL, -- 게시글 번호
+  `comment` varchar(200) NOT NULL,
+  `time` datetime DEFAULT CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY(`commentId`)
+);
+CREATE TABLE `comment` (
+  `commentId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL, 
+  `postUserId` varchar(100) NOT NULL, 
+  `postId` int(11) NOT NULL,
+  `comment` varchar(200) NOT NULL,
+  `time` datetime DEFAULT CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY(`commentId`)
+);
+
 -- 한글설정
 ALTER TABLE mypost convert to charset utf8;
+ALTER TABLE comment convert to charset utf8;
 
   INSERT INTO `mypost` (id, title, writer, main_text) VALUES (2,'hello', 'welcome,first', 'soya', '첫 게시글을 축하합니다.');
   INSERT INTO `mypost` VALUES (2,'고래 (Dive Into You)', 'NCT DREAM','dream,diveintoyou,sm', 'Look around 둘러봐도 온통 짙은 푸른빛 까만 밤 마치 깊은 물에 잠수한 듯이 먹먹함 속에 너의 목소리만 뚜렷해 어쩌지');
@@ -26,11 +57,6 @@ ALTER TABLE mypost convert to charset utf8;
 
 -- USER INFO
 
-CREATE TABLE `user` (
-  `userId` varchar(20) NOT NULL,
-  `userPassword` varchar(50) NOT NULL,
-  PRIMARY KEY(`userId`)
-);
 
 
 -- '좋아요' DB 
@@ -41,17 +67,19 @@ CREATE TABLE `like` (
   PRIMARY KEY(`userId`)
 );
 
-ALTER TABLE comment convert to charset utf8;
+
 
 -- 댓글
 -- 정렬 //// 해당 포스트의 시간 순으로
-CREATE TABLE `comment` (
-  `userId` varchar(20) NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `postUserId` varchar(20) NOT NULL,
-  `postId` varchar(20) NOT NULL,
-  `comment` varchar(200) NOT NULL,
-  `time` datetime DEFAULT CURRENT_TIMESTAMP,
+-- CREATE TABLE `comment` (
+--   `userId` varchar(20) NOT NULL,
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `postUserId` varchar(20) NOT NULL,
+--   `postId` varchar(20) NOT NULL,
+--   `comment` varchar(200) NOT NULL,
+--   `time` datetime DEFAULT CURRENT_TIMESTAMP,
   
-  PRIMARY KEY(`id`)
-);
+--   PRIMARY KEY(`id`)
+-- );
+
+

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://kit.fontawesome.com/9eb162ac0d.js" crossorigin="anonymous"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <link rel="stylesheet" href="/stylesheets/header.css">
   <link rel="stylesheet" href="/stylesheets/postDetail.css">
@@ -15,7 +15,7 @@
   <% include ../header %>
 
   <section class="detail-page">
-    <% result.forEach(item=> { %>
+    <% postData.forEach(item=> { %>
       <section class="detail-wrap">
         <section class="title">
           <span>
@@ -35,48 +35,60 @@
             <!-- <li>#tag2</li> -->
           </ul>
         </section>
+        <section class="thumbnail">
+          <img src="<%=item.image%>" alt="thumbnail">
+        </section>
         <section class="main_text">
           <p>
             <%= item.main_text %>
           </p>
         </section>
       </section>
-
+      
+      <!-- 내 게시글일때 -->
+      <section class="post-btn">
+        <% if(userId === item.userId) { %>
+          <button onclick="location.href='/post/postUpdate/<%=item.id%>'">게시물 수정</button>
+          <form action="/post/delete/<%=item.id%>" method="post">
+            <button class="deleteBtn" type="submit">삭제하기</button>
+          </form>
+          <% } %>
+      </section>
       <!-- 댓글 -->
       <section class="detail-comment">
         <div class="comment-box">
-          <input type="text" name="comment" class="comment">
-          <button type="button" class="comment-submit" onclick="commentSubmit(<%=item.id%>);">게시</button>
+          <!-- <input type="text" name="comment" class="comment"> -->
+          <textarea name="comment" class="comment"></textarea>
+          <button type="button" class="comment-submit" onclick="commentSubmit(<%=item.id%>);">댓글 달기</button>
         </div>
           <div class="comment-content">
-            <% commentList.forEach(commItem=> { %>
             <ul class="comment-ul"> 
+              <% commentUser.forEach(comm=> { %>
               <li class="comment-list">
-                <span class="comm-userId">
-                  <%= commItem.userId %>
-                </span>
+                <div class="comm-info">
+                  <span class="comm-userId">
+                    <%=comm.account %>
+                  </span>
+                  <span class="comm-time">
+                    <%= (comm.time).toLocaleString() %>
+                  </span>
+                  <div class="comm-btn">
+                    <% if(userId === comm.account) { %>
+                      <form action="/post/commDelete/<%=item.id%>/<%=comm.commentId%>" method="post">
+                        <button class="comm-delBtn" type="submit">삭제</button>
+                      </form>
+                      <button class="comm-updateBtn">수정</button>
+                    <% } %>
+                  </div>
+                </div>
                 <span class="comm-comment">
-                  <%= commItem.comment %>
+                  <%= comm.comment %>
                 </span>
-                <span class="comm-time">
-                  <%= (commItem.time).toLocaleString() %>
-                </span>
-                <button></button>
               </li>
+              <% }) %>
             </ul>
           </div>
-        <% }) %>
       </section>
-
-        <!-- 내 게시글일때 -->
-        <section class="post-btn">
-          <% if(userId===item.writer) { %>
-            <button onclick="location.href='/post/postUpdate/<%=item.id%>'">게시물 수정</button>
-            <form action="/post/delete/<%=item.id%>" method="post">
-              <button class="deleteBtn" type="submit">삭제하기</button>
-            </form>
-            <% } %>
-        </section>
     <% }) %>
   </section>
   <script src="/javascripts/post/postComment.js"></script>

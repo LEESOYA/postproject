@@ -1,221 +1,225 @@
 const express = require("express");
+const path = require("path");
 const router = express.Router();
 const db = require("../nodejs/myslq");
 const multer = require("multer");
-const upload = multer({ dest: "public/uploads/" });
+const storage = multer.diskStorage({
+  destination: (request, file, cb) => {
+    cb(null, "/public/uploads/");
+  },
+  filename: (request, file, cb) => {
+    // extname - 확장자 추출 후 출력
+    const ext = path.extname(file.originalname);
+    cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
+  },
+});
+const upload = multer({ storage: storage });
+const { createApiError, ErrorCode } = require("./apiError");
+const asyncApiRouter = require("./asyncApiRouter");
+const { response } = require("express");
 
 /* GET post listing. */
 
-// 좋아요 카운트
-router.post("/like/:id", (request, response, next) => {
-  like_check = () => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `select * from mypost where id=?`,
-        [request.params.id],
-        (error, result) => {
-          if (error) {
-            reject(new Error("sql error"));
-          }
-          if (!result[0]) {
-            reject(new Error("not exist post!"));
-          }
-          resolve({
-            likeState: result[0].like_state,
-            likeCnt: result[0].like_cnt,
-          });
-        }
-      );
+// 게시물 검색
+router.post("/post_search", async (request, response) => {
+  try {
+    const { search } = request.body;
+    const [searchResult] = await db.query(
+      `select * from mypost where main_text like '%${search}%'`
+    );
+    response.render("../views/post/post", {
+      data: searchResult,
+      userId: request.session.account,
     });
-  };
-
-  like_change = result => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `update mypost set like_cnt = ?, like_state = ? where id=?`,
-        result.likeState
-          ? [result.likeCnt - 1, !result.likeState, request.params.id]
-          : [result.likeCnt + 1, !result.likeState, request.params.id],
-        error => {
-          if (error) {
-            reject(new Error("sql error"));
-          }
-        }
-      );
-      resolve(result.likeState);
-    });
-  };
-  like_check()
-    .then(result => like_change(result))
-    .then(result => response.send({ success: true, like_state: !result }))
-    .catch(console.log);
+  } catch (error) {
+    console.error(error);
+  }
 });
+
+router.get("/popularity", async (request, response) => {
+  try {
+    const [data] = await db.query(
+      `select * from mypost order by like_cnt desc`
+    );
+    response.render("../views/post/post", {
+      data,
+      userId: request.session.account,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// 좋아요 카운트
+router.post(
+  "/like/:id",
+  asyncApiRouter(async (request, response) => {
+    const [data] = await db.query(`select * from mypost where id=?`, [
+      request.params.id,
+    ]);
+    if (!data[0]) {
+      throw createApiError(ErrorCode.NOT_EXIST_POST);
+    }
+    const { like_state, like_cnt } = data[0];
+
+    await db.query(
+      `update mypost set like_cnt = ?, like_state = ? where id=?`,
+      like_state
+        ? [like_cnt - 1, !like_state, request.params.id]
+        : [like_cnt + 1, !like_state, request.params.id]
+    );
+    response.send({ success: true, like_state: !like_state });
+  })
+);
 
 // 글쓰기
 router.get("/postWrite", (request, response, next) => {
-  if (request.session.is_logined) {
+  if (request.session.is_loggedIn) {
     response.render("../views/post/postWrite", {
-      userId: request.session.user_id,
+      userId: request.session.account,
     });
   }
 });
 
-router.post("/postWrite_process", (request, response) => {
-  const post = request.body;
-  const title = post.title;
-  const hashtag = post.hashtag;
-  const main_text = post.text;
-
-  db.query(
-    `INSERT INTO mypost (title, writer, hashtag, main_text) VALUES (?,?,?,?)`,
-    [title, request.session.user_id, hashtag, main_text],
-    err2 => {
-      if (err2) {
-        console.log(err2);
-      }
+router.post(
+  "/postWrite_process",
+  upload.single("thumb_upload"),
+  async (request, response) => {
+    try {
+      const { title, text } = request.body;
+      const hashtag = "임시태그";
+      const thumbnail = `/uploads/` + request.file.filename;
+      await db.query(
+        `INSERT INTO mypost (title, userId, hashtag, main_text, image) VALUES (?,?,?,?,?)`,
+        [title, request.session.account, hashtag, text, thumbnail]
+      );
+      response.redirect("../");
+    } catch (error) {
+      console.error(error);
     }
-  );
-  response.redirect("../");
-});
+  }
+);
 
 // 상세보기
-router.get("/postDetail/:id", (request, response, next) => {
-  db.query(
-    "select * from mypost where id = ?",
-    [request.params.id],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      const { id } = result[0];
-      // 댓글 리스트
-      db.query(
-        `select * from comment where postId=? order by time desc `,
-        [id],
-        (err, result2) => {
-          if (err) {
-            console.log(err);
-          }
-          if (request.session.is_logined) {
-            response.render("../views/post/postDetail", {
-              result,
-              userId: request.session.user_id,
-              commentList: result2,
-            });
-          } else if (
-            request.session.is_logined === undefined &&
-            request.session.user_id === undefined
-          ) {
-            response.render("../views/post/postDetail", {
-              result,
-              userId: undefined,
-              commentList: result2,
-            });
-          }
-        }
-      );
-    }
-  );
+router.get("/postDetail/:id", async (request, response) => {
+  try {
+    const [postData] = await db.query("select * from mypost where id = ?", [
+      request.params.id,
+    ]);
+    const { id } = postData[0];
+    const [commentData] = await db.query(
+      `select * from comment where postId=?`,
+      [id]
+    );
+    const [commentUser] = await db.query(
+      `select * from comment join user on (user.userId = comment.userId) where postId=?`,
+      [id]
+    );
+    const userAccount = request.session.account;
+    response.render("../views/post/postDetail", {
+      postData,
+      userId: userAccount === undefined ? "" : request.session.account[0],
+      commentUser,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // 댓글
-router.post("/comment/:id", (request, response) => {
-  const { comment } = request.body;
-  const userId = request.session.user_id;
-  db.query(
-    "select * from mypost where id = ?",
-    [request.params.id],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      const { id, writer } = result[0];
-      db.query(
-        `INSERT INTO comment (userId, postId, postUserId, comment) VALUES (?,?,?,?)`,
-        [request.session.user_id, id, writer, comment],
-        err2 => {
-          if (err2) {
-            console.log(err2);
-          }
-        }
-      );
-    }
-  );
-  response.send({ success: true, userId, comment });
+router.post("/comment/:id", async (request, response) => {
+  try {
+    const { comment } = request.body;
+    const [data] = await db.query("select * from mypost where id = ?", [
+      request.params.id,
+    ]);
+    const { id } = data[0];
+    await db.query(
+      `INSERT INTO comment (userId, postId, postUserId, comment) VALUES (?,?,?,?)`,
+      [request.session.user_id, request.params.id, id, comment]
+    );
+
+    response.send({
+      success: true,
+      userId: request.session.account,
+      comment,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// 댓글 삭제
+router.post("/commDelete/:postId/:commId", async (request, response) => {
+  try {
+    await db.query(`delete from comment where commentId=?`, [
+      request.params.commId,
+    ]);
+    response.redirect("/post/postDetail/" + request.params.postId);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // 수정
-router.get("/postUpdate/:id", (request, response, next) => {
-  post_update = () => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `select * from mypost where id = ?`,
-        [request.params.id],
-        (error, result) => {
-          if (error) {
-            reject(new Error("sql error"));
-          }
-          resolve(result);
-        }
-      );
+router.get("/postUpdate/:id", async (request, response) => {
+  try {
+    const [postData] = await db.query(`select * from mypost where id = ?`, [
+      request.params.id,
+    ]);
+    response.render("../views/post/postUpdate", {
+      userId: request.session.account,
+      postData,
     });
-  };
-  post_update().then(result => {
-    if (request.session.is_logined) {
-      response.render("../views/post/postUpdate", {
-        userId: request.session.user_id,
-        result,
-      });
-    }
-  });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-router.post("/update_process/:id", (request, response, next) => {
-  const post = request.body;
-  const title = post.title;
-  const hashtag = post.hashtag;
-  const main_text = post.text;
-
-  db.query(
-    `update mypost set title=?, hashtag=?, writer=?, main_text =?  where id=?`,
-    [title, hashtag, request.session.user_id, main_text, request.params.id],
-    err => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
-  response.redirect("/post/postDetail/" + request.params.id);
+router.post("/update_process/:id", async (request, response) => {
+  try {
+    const { title, hashtag, text } = request.body;
+    await db.query(
+      `update mypost set title=?, hashtag=?, userId=?, main_text =?  where id=?`,
+      [title, hashtag, request.session.account, text, request.params.id]
+    );
+    response.redirect("/post/postDetail/" + request.params.id);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // 삭제
-router.post("/delete/:id", (request, response, next) => {
-  db.query(`delete from mypost where id=?`, [request.params.id], err => {
-    if (err) {
-      console.log(err);
-    }
-  });
-  response.redirect("/");
+router.post("/delete/:id", async (request, response) => {
+  try {
+    await db.query(`delete from mypost where id=?`, [request.params.id]);
+    response.redirect("/");
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-// router.get("/uploadImg", (request, response) => {
-//   response.render("../views/post/uploadFile");
-// });
+router.get("/uploadImg", (request, response) => {
+  response.render("../views/post/uploadFile");
+});
 
-// router.post(
-//   "/upload_process",
-//   upload.single("uploadImg"),
-//   (request, response) => {
-//     db.query(`select * from mypost order by id desc;`, (error, data) => {
-//       if (error) {
-//         console.log(error);
-//       }
-//       response.render("../views/post/post", {
-//         userId: request.session.user_id,
-//         fileName: request.file.filename,
-//         data,
-//       });
-//     });
-//   }
-// );
+router.post(
+  "/upload_process",
+  upload.single("thumb_upload"),
+  async (request, response) => {
+    response.send("upload : " + request.file);
+    // console.log(request.file);
+    // await db.query(`select * from mypost order by id desc;`, (error, data) => {
+    //   if (error) {
+    //     console.log(error);
+    //   }
+    //   response.render("../views/post/post", {
+    //     userId: request.session.account,
+    //     fileName: request.file.filename,
+    //     data,
+    //   });
+    // });
+  }
+);
+
 module.exports = router;

@@ -6,8 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="short icon" href="#">
-  <script src="https://kit.fontawesome.com/9eb162ac0d.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/header.css">
   <link rel="stylesheet" href="/stylesheets/post.css">
   <title>Board</title>
@@ -16,29 +16,29 @@
 <body>
   <% include ../header %>
 
-    <section class="pagination-container">
-      <div class="pagination-content">
-        <div class="trending">
-          <i class="fas fa-chart-line"></i>
-          <span>트렌딩</span>
-        </div>
-        <div class="sort">
+    <section class="pagination">
+      <div class="filter">
+        <a class="popularity" href="/popularity">
+          <i class="far fa-thumbs-up"></i>
+          <span>인기순</span>
+        </a>
+        <a class="recent" href="/recent">
           <i class="far fa-clock"></i>
-          <span>최신</span>
-        </div>
+          <span>최신순</span>
+        </a>
       </div>
     </section>
 
-    <section class="post-container">
-      <div class="card-container">
-      <% data.forEach(item=> { %>
-        <div id="post-id-<%=item.id%>" class="post-cards">
+    <section class="post">
+      <div class="cards-container">
+        <% data.forEach(item=> { %>
+        <div id="post-id-<%=item.id%>" class="card-content">
           <a href="/post/postDetail/<%=item.id%>">
-            <div class="post-image">
-              <img src="/images/0.jpg" alt="thumbnail">
+            <div class="card__image">
+              <img src="<%= item.image %>" alt="thumbnail">
             </div>
 
-            <div class="post-content">
+            <div class="card-info">
               <div class="title">
                 <span>
                   <%=item.title %>
@@ -52,30 +52,30 @@
 
               <div class="subinfo">
                 <span>5일 전</span>
-                <span>댓글 11개</span>
+                <span>* 댓글 <%= item.commentCount%>개</span>
               </div>
-              </a>
-              <div class="post-footer">
-                <div class="uesrinfo">
-                  <span>by <%= item.writer %></span>
-                </div>
-                <div class="likes">
-                  <button class="likes-btn" onclick="like(<%=item.id%>);">
-                    <% if(item.like_state) { %>
-                      <i class="fas fa-heart" ></i>
-                    <% } else { %>
-                      <i class="far fa-heart" ></i>
-                    <% } %>
-                  </button>
-                  <span class="like-cnt">
-                    <%= item.like_cnt %>
-                  </span>
-                </div>
-              </div>
-            
+          </a>
+          <div class="post-footer">
+            <div class="uesrinfo">
+              <span>by <%= item.userId %></span>
             </div>
+            <div class="likes">
+              <button class="likes-btn" onclick="like(<%=item.id%>);">
+                <% if(item.like_state) { %>
+                  <i class="fas fa-heart"></i>
+                  <% } else { %>
+                    <i class="far fa-heart"></i>
+                    <% } %>
+              </button>
+              <span class="like-cnt">
+                <%= item.like_cnt %>
+              </span>
+            </div>
+          </div>
+
         </div>
-        <% }) %>
+      </div>
+      <% }) %>
         </div>
     </section>
     <script src="/javascripts/post/post.js"></script>

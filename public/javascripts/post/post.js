@@ -15,3 +15,18 @@ const like = id => {
       console.log(error);
     });
 };
+
+// 인기순
+const popularity = () => {
+  // axios
+  //   .get("/post/popularity")
+  //   .then(response => {
+  //     console.log(response.data);
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
+};
+
+// 최신순
+const recent = () => {};
