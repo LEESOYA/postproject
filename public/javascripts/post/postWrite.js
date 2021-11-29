@@ -1,6 +1,6 @@
 window.onload = () => {
   const hashtag = document.querySelector(".hashtag");
-  const tagList = document.querySelector(".tag-list");
+  const tagList = document.querySelector(".tag__list");
 
   title.addEventListener("keydown", e => {
     if (e.key === "Enter") {

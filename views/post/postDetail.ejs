@@ -14,20 +14,20 @@
 
   <% include ../header %>
 
-  <section class="detail-page">
+  <section class="detail-container">
     <% postData.forEach(item=> { %>
-      <section class="detail-wrap">
-        <section class="title">
+      <section class="detail-content">
+        <section class="detail__title">
           <span>
             <%= item.title %>
           </span>
         </section>
-        <section class="writer">
+        <section class="detail__writer">
           <span>
             <%= item.writer %>
           </span>
         </section>
-        <section class="hashtags">
+        <section class="detail__hashtags">
           <ul>
             <li>
               <%= item.hashtag %>
@@ -35,10 +35,10 @@
             <!-- <li>#tag2</li> -->
           </ul>
         </section>
-        <section class="thumbnail">
+        <section class="detail__thumbnail">
           <img src="<%=item.image%>" alt="thumbnail">
         </section>
-        <section class="main_text">
+        <section class="main-text">
           <p>
             <%= item.main_text %>
           </p>
@@ -46,17 +46,18 @@
       </section>
       
       <!-- 내 게시글일때 -->
-      <section class="post-btn">
+      <section class="my-post-btn">
         <% if(userId === item.userId) { %>
           <button onclick="location.href='/post/postUpdate/<%=item.id%>'">게시물 수정</button>
           <form action="/post/delete/<%=item.id%>" method="post">
-            <button class="deleteBtn" type="submit">삭제하기</button>
+            <button class="my-delete-btn" type="submit">삭제하기</button>
           </form>
           <% } %>
       </section>
+
       <!-- 댓글 -->
-      <section class="detail-comment">
-        <div class="comment-box">
+      <section class="detail__comment">
+        <div class="comment-input">
           <!-- <input type="text" name="comment" class="comment"> -->
           <textarea name="comment" class="comment"></textarea>
           <button type="button" class="comment-submit" onclick="commentSubmit(<%=item.id%>);">댓글 달기</button>
@@ -65,23 +66,23 @@
             <ul class="comment-ul"> 
               <% commentUser.forEach(comm=> { %>
               <li class="comment-list">
-                <div class="comm-info">
-                  <span class="comm-userId">
+                <div class="comment__info">
+                  <span class="comment__userId">
                     <%=comm.account %>
                   </span>
-                  <span class="comm-time">
+                  <span class="comment__time">
                     <%= (comm.time).toLocaleString() %>
                   </span>
-                  <div class="comm-btn">
+                  <div class="comment-btn">
                     <% if(userId === comm.account) { %>
                       <form action="/post/commDelete/<%=item.id%>/<%=comm.commentId%>" method="post">
-                        <button class="comm-delBtn" type="submit">삭제</button>
+                        <button class="comment__delete-btn" type="submit">삭제</button>
                       </form>
-                      <button class="comm-updateBtn">수정</button>
+                      <button class="commen__update-btn">수정</button>
                     <% } %>
                   </div>
                 </div>
-                <span class="comm-comment">
+                <span class="comment-text">
                   <%= comm.comment %>
                 </span>
               </li>

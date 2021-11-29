@@ -6,39 +6,41 @@ body {
   user-select: none;
 }
 
-.postWrite-container {
+.post-write-container {
   position: relative;
 }
-.postWrite-container .post {
-  height: 100vh;
+.post-write-container .post {
+  height: 90vh;
   width: 70vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: auto;
+  /* margin: auto; */
+  margin-top: 2rem;
 }
 
-.post-title input {
-  font-size: 3rem;
+.write__title input {
+  font-size: 2rem;
+  font-weight: bold;
   padding: 0.5rem 1rem;
   border: none;
   border-bottom: 1px solid lightgray;
   outline: none;
   margin-bottom: 1rem;
 }
-.post-title input::placeholder {
+.write__title input::placeholder {
   color: darkgray;
   font-style: italic;
 }
 
-.post-tags {
+.write__tags {
   display: flex;
   flex-direction: row;
 }
 
-.post-tags input {
-  font-size: 1.7rem;
+.write__tags input {
+  font-size: 1.2rem;
   padding: 0.5rem 1rem;
   border: none;
   border-bottom: 1px solid lightgray;
@@ -46,27 +48,22 @@ body {
   margin-bottom: 1rem;
 }
 
-.post-tags input::placeholder {
+.write__tags input::placeholder {
   color: lightgray;
   font-style: italic;
 }
 
-.hashtag-inform {
-  display: none;
-  width: fit-content;
-  border: 1px solid black;
-  padding: 1rem 1.5rem;
-  line-height: 1.7rem;
-  position: absolute;
-  top: 220px;
-  background-color: #363636;
-  color: white;
+.write__tags .tag__list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
-.post-tags .tag-list li {
-  font-size: 1.1rem;
+.write__tags .tag__list li {
   width: fit-content;
-  padding: 0.7rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 1.5rem;
   background-color: rgb(224, 233, 230);
   color: cadetblue;
@@ -74,15 +71,14 @@ body {
   align-content: center;
   justify-content: center;
   margin-bottom: 0.75rem;
+  margin-right: 0.5rem;
+  font-weight: bold;
 }
 
-.post-tags .tag-list {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+.write__thumbnail {
+  margin-bottom: 1rem;
 }
-.post-content textarea {
+.write__text textarea {
   width: 50vw;
   height: 55vh;
   font-size: 1.5rem;
@@ -92,7 +88,7 @@ body {
   resize: none;
 }
 
-.post-buttons .buttons button {
+.post-buttons button {
   margin-right: 0.5rem;
   font-size: 1rem;
   padding: 0.5rem 1rem;
@@ -102,7 +98,11 @@ body {
   line-height: 1;
 }
 
-.post-buttons .buttons button:hover {
+.post-buttons .return-btn:hover {
   cursor: pointer;
   color: #bdb8b8;
+}
+.post-buttons .return-btn:hover {
+  cursor: pointer;
+  color: #ff0000;
 }

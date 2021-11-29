@@ -11,43 +11,37 @@ ul {
 li {
   list-style: none;
 }
-.detail-page {
+.detail-container {
   width: 70vw;
   margin: auto;
 }
 
-.detail-wrap {
+.detail-content {
   margin-top: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
 }
 
-.detail-wrap .title {
-  margin-bottom: 3rem;
-}
-
-.detail-wrap .title span {
+.detail-content .detail__title span {
   font-size: 4.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
 }
 
-.detail-wrap .writer {
+.detail-content .detail__writer {
   margin-bottom: 1rem;
 }
 
-.detail-wrap .writer span {
+.detail-content .detail__writer span {
   font-weight: 700;
-  /* margin-bottom: 1rem; */
 }
 
-.detail-wrap .hashtags {
+.detail-content .detail__hashtags {
   margin-bottom: 1.5rem;
 }
 
-.detail-wrap .hashtags li {
+.detail-content .detail__hashtags li {
   font-size: 1.2rem;
   width: fit-content;
   padding: 0.7rem 1.5rem;
@@ -59,23 +53,23 @@ li {
   justify-content: center;
 }
 
-.thumbnail img {
+.detail__thumbnail img {
   width: 300x;
   height: 200px;
 }
-.detail-wrap .main_text p {
+.detail-content .main-text p {
   font-size: 1.2rem;
 }
 
-.post-btn {
+.my-post-btn {
   margin-top: 1rem;
   margin-bottom: 2rem;
   display: flex;
   flex-direction: row;
 }
 
-.post-btn button,
-.deleteBtn {
+.my-post-btn button,
+.my-delete-btn {
   font-size: 1rem;
   padding: 0.5rem 1rem;
   background-color: transparent;
@@ -85,17 +79,17 @@ li {
   cursor: pointer;
 }
 
-.deleteBtn {
+.my-delete-btn {
   margin-left: 1rem;
   color: red;
 }
 
-.detail-comment {
-  /* border: 1px solid gray; */
+.detail__comment {
   background-color: #f8f8f8;
   padding: 1rem;
+  margin-bottom: 3rem;
 }
-.comment-box {
+.comment-input {
   display: flex;
   flex-direction: row;
 }
@@ -119,34 +113,33 @@ li {
   margin-right: 1.5rem;
 }
 
-.comment-list .comm-userId {
+.comment-list .comment__userId {
   font-size: 1.2rem;
 }
-.comment-list .comm-time {
+.comment-list .comment__time {
   font-size: 0.7rem;
   color: gray;
 }
-.comm-info {
+.comment__info {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: 0.5rem;
 }
-.comm-info .comm-time {
+.comment__info .comment__time {
   display: flex;
   flex: 1;
 }
-.comment-list .comm-comment {
-  /* padding: 0.5rem 0.7rem; */
+.comment-list .comment-text {
   font-size: 15px;
   padding-bottom: 0.7rem;
   padding-left: 0.7rem;
   overflow: hidden;
 }
-.comm-btn {
+.comment-btn {
   display: flex;
   flex-direction: row;
 }
-.comm-btn .comm-delBtn {
+.comment-btn .comment__delete-btn {
   color: red;
 }
